@@ -4,10 +4,12 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma from "./src/lib/prisma";
+import { getPrisma } from "./src/lib/prisma";
 
 const config = {
-  adapter: PrismaAdapter(prisma),
+  ...(process.env.DATABASE_URL
+    ? { adapter: PrismaAdapter(getPrisma()) }
+    : {}),
   secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
   trustHost: true,

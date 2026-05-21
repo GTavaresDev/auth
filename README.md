@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org) project using NextAuth and Prisma.
 
 ## Local Setup
 
+0. Use the project's Node version before running any npm command:
+
+```bash
+nvm use 24
+```
+
 1. Start a local Postgres with Docker:
 
 ```bash
@@ -23,6 +29,7 @@ npm run db:migrate
 4. Run the development server:
 
 ```bash
+nvm use 24
 npm run dev
 ```
 

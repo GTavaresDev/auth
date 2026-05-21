@@ -23,15 +23,23 @@ function createAdapter() {
   return new PrismaPg(new Pool({ connectionString }));
 }
 
-const prisma =
-  globalThis.prisma ??
-  new PrismaClient({
+let prismaClient = globalThis.prisma;
+
+export function getPrisma() {
+  if (prismaClient) {
+    return prismaClient;
+  }
+
+  prismaClient = new PrismaClient({
     adapter: createAdapter(),
     errorFormat: "pretty",
   });
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.prisma = prisma;
+  if (process.env.NODE_ENV !== "production") {
+    globalThis.prisma = prismaClient;
+  }
+
+  return prismaClient;
 }
 
-export default prisma;
+export default getPrisma;

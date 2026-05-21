@@ -1,5 +1,10 @@
 # Design System — Guia de Criação de Telas
 
+## Aprendizados Operacionais
+
+- Neste projeto, sempre rode `nvm use 24` antes de qualquer comando `npm`, `next` ou `prisma`.
+- Considere Node 24 como requisito operacional padrão, mesmo quando a máquina tiver outras versões instaladas.
+
 Use este arquivo como instrução para qualquer IA criar telas no mesmo padrão visual. Cole o conteúdo abaixo no início do seu prompt.
 
 ---
