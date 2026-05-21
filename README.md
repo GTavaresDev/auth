@@ -1,24 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project using NextAuth and Prisma.
 
-## Getting Started
+## Local Setup
 
-First, run the development server:
+1. Start a local Postgres with Docker:
+
+```bash
+npm run db:local:up
+```
+
+2. Create your local env file from the example and fill the auth secrets:
+
+```bash
+cp .env.local.example .env.local
+```
+
+3. Apply the Prisma migrations to the local database:
+
+```bash
+npm run db:migrate
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Useful database commands:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run db:studio
+npm run db:local:logs
+npm run db:local:down
+```
+
+## Production
+
+Production uses Neon/Postgres through environment variables configured in Vercel. Keep `.env.local` for your local Docker database, and configure production envs separately in Vercel.
 
 ## Learn More
 
