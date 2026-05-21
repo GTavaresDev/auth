@@ -1,24 +1,29 @@
 "use server";
 
-import { signIn, signOut, auth } from "auth";
+import { signOut, auth } from "auth";
 import Link from "next/link";
+import { getUserByEmail } from "@/actions";
 
 const Navbar = async () => {
   const session = await auth();
+  const user = await getUserByEmail(session?.user.email ?? null);
+
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
+    <nav className="w-full bg-white border-b border-zinc-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14">
           <Link
             href="/"
-            className="text-2xl font-bold hover:text-blue-200 transition"
+            className="font-serif text-xl text-zinc-900 hover:text-zinc-500 transition-colors duration-150"
           >
             Home
           </Link>
 
-          {session && session.user ? (
-            <div className="flex items-center gap-6">
-              <span className="text-lg font-semibold">{session.user.name}</span>
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-zinc-900 font-light">
+                {user.name}
+              </span>
               <form
                 action={async () => {
                   "use server";
@@ -27,26 +32,19 @@ const Navbar = async () => {
               >
                 <button
                   type="submit"
-                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-semibold transition duration-200 shadow-md"
+                  className="px-4 py-1.5 rounded-xl border border-zinc-900 bg-white hover:bg-gray-50 text-zinc-800 text-sm font-medium transition-colors duration-150"
                 >
                   Sair
                 </button>
               </form>
             </div>
           ) : (
-            <form
-              action={async () => {
-                "use server";
-                await signIn();
-              }}
+            <Link
+              href="/signin"
+              className="px-4 py-1.5 rounded-xl border border-zinc-900 bg-white hover:bg-gray-50 text-zinc-800 text-sm font-medium transition-colors duration-150"
             >
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-lg font-semibold transition duration-200 shadow-md"
-              >
-                Entrar
-              </button>
-            </form>
+              Entrar
+            </Link>
           )}
         </div>
       </div>
