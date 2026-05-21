@@ -7,16 +7,47 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export function hasDatabaseUrl() {
-  return Boolean(process.env.DATABASE_URL);
+function buildConnectionStringFromPgEnv() {
+  const host = process.env.PGHOST;
+  const database = process.env.PGDATABASE;
+  const user = process.env.PGUSER;
+  const password = process.env.PGPASSWORD;
+
+  if (!host || !database || !user || !password) {
+    return null;
+  }
+
+  const url = new URL(
+    `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}/${database}`,
+  );
+
+  url.port = process.env.PGPORT ?? "5432";
+
+  if (process.env.PGSSLMODE) {
+    url.searchParams.set("sslmode", process.env.PGSSLMODE);
+  }
+
+  if (process.env.PGCHANNELBINDING) {
+    url.searchParams.set("channel_binding", process.env.PGCHANNELBINDING);
+  }
+
+  return url.toString();
+}
+
+export function getConnectionString() {
+  return process.env.DATABASE_URL ?? buildConnectionStringFromPgEnv();
+}
+
+export function hasDatabaseConfig() {
+  return Boolean(getConnectionString());
 }
 
 function createAdapter() {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = getConnectionString();
 
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL is not configured. Set it in the active environment before using Prisma or authentication.",
+      "Database credentials are not configured. Set DATABASE_URL or the PGHOST/PGDATABASE/PGUSER/PGPASSWORD variables in the active environment before using Prisma or authentication.",
     );
   }
 
