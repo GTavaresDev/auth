@@ -2,11 +2,10 @@
 
 import { signOut, auth } from "auth";
 import Link from "next/link";
-import { getUserByEmail } from "@/actions";
 
 const Navbar = async () => {
   const session = await auth();
-  const user = await getUserByEmail(session?.user.email ?? null);
+  const user = session?.user;
 
   return (
     <nav className="w-full bg-white border-b border-zinc-900">
@@ -19,7 +18,7 @@ const Navbar = async () => {
             Home
           </Link>
 
-          {user ? (
+          {user?.name ? (
             <div className="flex items-center gap-4">
               <span className="text-sm text-zinc-900 font-light">
                 {user.name}
