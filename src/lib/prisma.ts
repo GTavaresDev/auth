@@ -1,5 +1,5 @@
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -8,8 +8,8 @@ declare global {
 const prisma =
   globalThis.prisma ??
   new PrismaClient({
-    adapter: new PrismaBetterSqlite3({
-      url: process.env.DATABASE_URL!,
+    adapter: new PrismaNeon({
+      connectionString: process.env.DATABASE_URL!,
     }),
     errorFormat: "pretty",
   });
