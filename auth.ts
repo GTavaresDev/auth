@@ -4,10 +4,10 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { getPrisma } from "./src/lib/prisma";
+import { getPrisma, hasDatabaseUrl } from "./src/lib/prisma";
 
 const config = {
-  ...(process.env.DATABASE_URL
+  ...(hasDatabaseUrl()
     ? { adapter: PrismaAdapter(getPrisma()) }
     : {}),
   secret: process.env.AUTH_SECRET,
@@ -37,7 +37,19 @@ const config = {
   },
 } satisfies NextAuthConfig;
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+const nextAuth = NextAuth(config);
+
+export const { handlers, auth, signOut } = nextAuth;
+
+export async function signIn(...args: Parameters<typeof nextAuth.signIn>) {
+  if (!hasDatabaseUrl()) {
+    throw new Error(
+      "Authentication requires DATABASE_URL in the active environment. Add it in Vercel Production before signing in.",
+    );
+  }
+
+  return nextAuth.signIn(...args);
+}
 
 // Definir o tipo do provedor
 interface ProviderWithId {

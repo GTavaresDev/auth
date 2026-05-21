@@ -7,11 +7,17 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
+export function hasDatabaseUrl() {
+  return Boolean(process.env.DATABASE_URL);
+}
+
 function createAdapter() {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    throw new Error("DATABASE_URL is not configured.");
+    throw new Error(
+      "DATABASE_URL is not configured. Set it in the active environment before using Prisma or authentication.",
+    );
   }
 
   const hostname = new URL(connectionString).hostname;
