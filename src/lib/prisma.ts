@@ -9,7 +9,7 @@ const prisma =
   globalThis.prisma ??
   new PrismaClient({
     adapter: new PrismaBetterSqlite3({
-      url: process.env.DATABASE_URL!,
+      url: process.env.DATABASE_URL ?? "file:./dev.db",
     }),
     errorFormat: "pretty",
   });

@@ -1,8 +1,11 @@
 "use server";
 
 import { signOut, auth } from "auth";
+import Image from "next/image";
 import Link from "next/link";
 import { getUserByEmail } from "@/actions";
+import Button from "./Button";
+import ButtonLink from "./ButtonLink";
 
 const Navbar = async () => {
   const session = await auth();
@@ -12,17 +15,27 @@ const Navbar = async () => {
     <nav className="w-full bg-white border-b border-zinc-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14">
-          <Link
-            href="/"
-            className="font-serif text-xl text-zinc-900 hover:text-zinc-500 transition-colors duration-150"
-          >
-            Home
-          </Link>
+          <div className="flex items-center gap-4">
+            <ButtonLink href="/">Home</ButtonLink>
+            <ButtonLink href="/profile">Profile</ButtonLink>
+            <ButtonLink href="/my-posts">Posts</ButtonLink>
+          </div>
 
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-zinc-900 font-light">
+              <span className="flex text-sm gap-2 text-zinc-900 font-light">
                 {user.name}
+              </span>
+              <span>
+                {user.image ? (
+                  <Image
+                    src={user.image}
+                    alt={`Perfil de ${user.name ?? "usuario"}`}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                ) : null}
               </span>
               <form
                 action={async () => {
@@ -30,12 +43,7 @@ const Navbar = async () => {
                   await signOut();
                 }}
               >
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-xl border border-zinc-900 bg-white hover:bg-gray-50 text-zinc-800 text-sm font-medium transition-colors duration-150"
-                >
-                  Sair
-                </button>
+                <Button text="Sair" />
               </form>
             </div>
           ) : (
